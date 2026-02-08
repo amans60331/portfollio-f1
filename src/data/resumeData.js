@@ -5,8 +5,9 @@ export const resumeData = {
   contact: {
     phone: "+91-8269776520",
     email: "amans60331@gmail.com",
-    linkedin: "https://linkedin.com/in/aman-sharma",
-    leetcode: "https://leetcode.com/aman-sharma",
+    linkedin: "https://www.linkedin.com/in/aman-sharma-249508116",
+    leetcode: "https://leetcode.com/u/shirooyasha/",
+    github: "https://github.com/amans60331",
   },
   summary: "Angular Developer with 2 years of experience, specializing in frontend development. Proficient in Javascript and Angular, excelling at building reliable applications. Possesses a strong foundation in Data Structures and Algorithms, with over 400 problems solved on various coding platforms.",
   experience: [
