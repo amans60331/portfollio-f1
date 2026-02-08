@@ -32,10 +32,12 @@ const F1Car = ({ isMoving = false, direction = 1, colorTheme = 'red' }) => {
         <path d="M25 55 L75 55" stroke="#ef4444" strokeWidth="3" />
 
         {/* Tires */}
-        <g className={`wheels ${isMoving ? 'spinning' : ''}`}>
+        <g className={isMoving ? 'spinning-wheel' : ''} style={{ transformOrigin: '95px 120px' }}>
           <circle cx="95" cy="120" r="38" fill="#0a0a0a" stroke="#1a1a1a" strokeWidth="4" />
           <circle cx="95" cy="120" r="30" fill="none" stroke="#ef4444" strokeWidth="2" strokeDasharray="10 5" opacity="0.6" />
+        </g>
 
+        <g className={isMoving ? 'spinning-wheel' : ''} style={{ transformOrigin: '340px 120px' }}>
           <circle cx="340" cy="120" r="36" fill="#0a0a0a" stroke="#1a1a1a" strokeWidth="4" />
           <circle cx="340" cy="120" r="28" fill="none" stroke="#ef4444" strokeWidth="2" strokeDasharray="10 5" opacity="0.6" />
         </g>
@@ -52,14 +54,13 @@ const F1Car = ({ isMoving = false, direction = 1, colorTheme = 'red' }) => {
           height: auto;
           filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
         }
-        .spinning {
+        .spinning-wheel {
           animation: spin 0.2s linear infinite;
         }
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-        .wheels circle { transform-origin: center; }
       `}</style>
     </div>
   );

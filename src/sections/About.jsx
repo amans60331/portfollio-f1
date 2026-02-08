@@ -15,7 +15,13 @@ const About = () => {
             className="about-image-container"
           >
             <div className="profile-frame">
-              <img src={profileImg} alt="Aman Sharma - F1 Racer" className="profile-img" />
+              <img
+                src={profileImg}
+                alt="Aman Sharma - Performance Engineer"
+                className="profile-img"
+                loading="lazy"
+                decoding="async"
+              />
               <div className="frame-neon-border"></div>
             </div>
             <div className="driver-stats">

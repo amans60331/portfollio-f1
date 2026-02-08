@@ -1,46 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import PitStopMan from '../components/PitStopMan';
+import { validateContactForm } from '../utils/validation';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState(null);
   const [errors, setErrors] = useState({});
-
-  const validateForm = (data) => {
-    const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9\s-+()]{10,15}$/;
-
-    if (!data.get('name').trim()) {
-      newErrors.name = "Driver name required for entry.";
-    }
-
-    if (!emailRegex.test(data.get('email'))) {
-      newErrors.email = "Valid cockpit frequency (email) required.";
-    }
-
-    const phone = data.get('phone');
-    if (phone && !phoneRegex.test(phone)) {
-      newErrors.phone = "Invalid telemetry line (min 10 digits).";
-    }
-
-    if (!data.get('subject').trim()) {
-      newErrors.subject = "Race briefing (subject) required.";
-    }
-
-    if (!data.get('message').trim()) {
-      newErrors.message = "Message logs cannot be empty.";
-    }
-
-    return newErrors;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
     const formData = new FormData(e.target);
-    const validationErrors = validateForm(formData);
+    const validationErrors = validateContactForm(formData);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);

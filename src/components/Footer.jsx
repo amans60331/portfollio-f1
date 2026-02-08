@@ -1,7 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Code2, Cpu } from 'lucide-react';
-import { resumeData } from '../data/resumeData';
+import { Cpu } from 'lucide-react';
+import SocialLinks from './SocialLinks';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -46,22 +45,9 @@ const Footer = () => {
           </div>
 
           <div className="footer-right">
-            <div className="social-links">
-              <a href={resumeData.contact.github} target="_blank" rel="noopener noreferrer" className="social-icon" title="GitHub">
-                <Github size={20} />
-              </a>
-              <a href={resumeData.contact.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn">
-                <Linkedin size={20} />
-              </a>
-              <a href={resumeData.contact.leetcode} target="_blank" rel="noopener noreferrer" className="social-icon" title="LeetCode">
-                <Code2 size={20} />
-              </a>
-              <a href={`mailto:${resumeData.contact.email}`} className="social-icon" title="Gmail">
-                <Mail size={20} />
-              </a>
-            </div>
+            <SocialLinks size={20} />
             <div className="lap-timer racing-font">
-              LAST UPDATED: FEB 2026
+              LAST UPDATED: FEB 2024
             </div>
           </div>
         </div>

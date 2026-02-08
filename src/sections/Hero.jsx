@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Code2 } from 'lucide-react';
 import { resumeData } from '../data/resumeData';
 import PitStopMan from '../components/PitStopMan';
+import SocialLinks from '../components/SocialLinks';
 
 const Hero = () => {
   return (
@@ -29,24 +29,11 @@ const Hero = () => {
 
           <p className="description">
             Specializing in high-speed frontend architecture and
-            aerodynamic user experiences. 3+ years of full-throttle development.
+            aerodynamic user experiences. 2+ years of full-throttle development.
           </p>
 
           <div className="hero-social-row">
-            <div className="social-links-v2">
-              <a href={resumeData.contact.github} target="https://github.com/amans60331" rel="noopener noreferrer" className="hero-social-icon" title="GitHub">
-                <Github size={24} />
-              </a>
-              <a href={resumeData.contact.linkedin} target="_blank" rel="noopener noreferrer" className="hero-social-icon" title="LinkedIn">
-                <Linkedin size={24} />
-              </a>
-              <a href={resumeData.contact.leetcode} target="_blank" rel="noopener noreferrer" className="hero-social-icon" title="LeetCode">
-                <Code2 size={24} />
-              </a>
-              <a href={`mailto:${resumeData.contact.email}`} className="hero-social-icon" title="Gmail">
-                <Mail size={24} />
-              </a>
-            </div>
+            <SocialLinks variant="hero-variant" size={24} />
           </div>
         </motion.div>
 

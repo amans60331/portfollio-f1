@@ -24,7 +24,7 @@
 
 @font-face {
   font-family: 'Racing';
-  src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+  src: local('Orbitron'), local('Orbitron-Regular');
 }
 
 * {

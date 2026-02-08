@@ -3,115 +3,115 @@ import { motion, AnimatePresence } from 'framer-motion';
 import F1Car from './F1Car';
 
 const Preloader = ({ onComplete }) => {
-    const [lights, setLights] = useState(0); // 0-4
-    const [hasStarted, setHasStarted] = useState(false);
+  const [lights, setLights] = useState(0); // 0-4
+  const [hasStarted, setHasStarted] = useState(false);
 
-    useEffect(() => {
-        const timers = [];
-        // Faster F1 Lighting Sequence
-        timers.push(setTimeout(() => setLights(1), 500));
-        timers.push(setTimeout(() => setLights(2), 1000));
-        timers.push(setTimeout(() => setLights(3), 1500));
-        timers.push(setTimeout(() => setLights(4), 2000));
+  useEffect(() => {
+    const timers = [];
+    // Faster F1 Lighting Sequence
+    timers.push(setTimeout(() => setLights(1), 300));
+    timers.push(setTimeout(() => setLights(2), 600));
+    timers.push(setTimeout(() => setLights(3), 900));
+    timers.push(setTimeout(() => setLights(4), 1200));
 
-        // Launch!
-        timers.push(setTimeout(() => {
-            setLights(5); // Go
-            setHasStarted(true);
-        }, 2800));
+    // Launch!
+    timers.push(setTimeout(() => {
+      setLights(5); // Go
+      setHasStarted(true);
+    }, 1800));
 
-        // Exit
-        timers.push(setTimeout(onComplete, 5000));
+    // Wait for car to zoom out
+    timers.push(setTimeout(onComplete, 3500));
 
-        return () => timers.forEach(t => clearTimeout(t));
-    }, [onComplete]);
+    return () => timers.forEach(t => clearTimeout(t));
+  }, [onComplete]);
 
-    const SmokeParticle = ({ delay, isStarting = false }) => (
-        <motion.div
-            initial={{ opacity: 0.6, scale: 0.2, x: 0, y: 0 }}
-            animate={{
-                opacity: 0,
-                scale: isStarting ? 2 : 5,
-                x: isStarting ? -30 - Math.random() * 50 : -300 - Math.random() * 200,
-                y: Math.random() * 30 - 15
-            }}
-            transition={{ duration: isStarting ? 1.5 : 2.5, delay, ease: "easeOut" }}
-            className="smoke-particle"
-        />
-    );
+  const SmokeParticle = ({ delay, isStarting = false }) => (
+    <motion.div
+      initial={{ opacity: 0.6, scale: 0.2, x: 0, y: 0 }}
+      animate={{
+        opacity: 0,
+        scale: isStarting ? 2 : 5,
+        x: isStarting ? -30 - Math.random() * 50 : -300 - Math.random() * 200,
+        y: Math.random() * 30 - 15
+      }}
+      transition={{ duration: isStarting ? 1.5 : 2.5, delay, ease: "easeOut" }}
+      className="smoke-particle"
+    />
+  );
 
-    return (
-        <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.5 } }}
-            className="preloader-overlay"
-        >
-            <div className="vignette"></div>
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+      className="preloader-overlay"
+    >
+      <div className="vignette"></div>
 
-            <div className="top-gantry">
-                <div className="gantry-structure">
-                    <div className="light-unit-row">
-                        {[1, 2, 3, 4].map((num) => (
-                            <div key={num} className="light-unit">
-                                <div className={`light-bulb red ${lights >= num && lights < 5 ? 'on' : ''}`}>
-                                    <div className="bulb-glare"></div>
-                                </div>
-                                <div className={`light-bulb green ${lights === 5 ? 'on' : ''}`}>
-                                    <div className="bulb-glare"></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+      <div className="top-gantry">
+        <div className="gantry-structure">
+          <div className="light-unit-row">
+            {[1, 2, 3, 4].map((num) => (
+              <div key={num} className="light-unit">
+                <div className={`light-bulb red ${lights >= num && lights < 5 ? 'on' : ''}`}>
+                  <div className="bulb-glare"></div>
                 </div>
-            </div>
-
-            <div className="neon-track-zone">
-                <div className="track-glow"></div>
-                <div className="neon-edge-line"></div>
-                <div className="center-dash-stripes"></div>
-            </div>
-
-            <motion.div
-                initial={{ left: "-40%", x: "-50%", bottom: "25%" }}
-                animate={hasStarted
-                    ? { left: "150%", transition: { duration: 1.1, ease: [0.8, 0, 0.1, 1] } }
-                    : { left: "50%", transition: { duration: 1.5, ease: "circOut" } }
-                }
-                className="f1-realistic-wrapper"
-            >
-                <div className="car-vfx-container">
-                    {!hasStarted && (
-                        <div className="countdown-smoke">
-                            {[...Array(12)].map((_, i) => <SmokeParticle key={`pre-${i}`} delay={i * 0.1} isStarting={true} />)}
-                        </div>
-                    )}
-
-                    <F1Car isMoving={hasStarted} />
-
-                    {hasStarted && (
-                        <div className="launch-vfx">
-                            <div className="engine-flame"></div>
-                            <div className="thick-smoke">
-                                {[...Array(30)].map((_, i) => <SmokeParticle key={`post-${i}`} delay={i * 0.01} />)}
-                            </div>
-                        </div>
-                    )}
+                <div className={`light-bulb green ${lights === 5 ? 'on' : ''}`}>
+                  <div className="bulb-glare"></div>
                 </div>
-            </motion.div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-            <AnimatePresence>
-                {hasStarted && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="f1-announcement racing-font"
-                    >
-                        LIGHTS OUT & AWAY WE GO!
-                    </motion.div>
-                )}
-            </AnimatePresence>
+      <div className="neon-track-zone">
+        <div className="track-glow"></div>
+        <div className="neon-edge-line"></div>
+        <div className="center-dash-stripes"></div>
+      </div>
 
-            <style jsx>{`
+      <motion.div
+        initial={{ left: "-40%", x: "-50%", bottom: "25%" }}
+        animate={hasStarted
+          ? { left: "150%", transition: { duration: 1.1, ease: [0.8, 0, 0.1, 1] } }
+          : { left: "50%", transition: { duration: 1.5, ease: "circOut" } }
+        }
+        className="f1-realistic-wrapper"
+      >
+        <div className="car-vfx-container">
+          {!hasStarted && (
+            <div className="countdown-smoke">
+              {[...Array(12)].map((_, i) => <SmokeParticle key={`pre-${i}`} delay={i * 0.1} isStarting={true} />)}
+            </div>
+          )}
+
+          <F1Car isMoving={hasStarted} />
+
+          {hasStarted && (
+            <div className="launch-vfx">
+              <div className="engine-flame"></div>
+              <div className="thick-smoke">
+                {[...Array(30)].map((_, i) => <SmokeParticle key={`post-${i}`} delay={i * 0.01} />)}
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {hasStarted && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="f1-announcement racing-font"
+          >
+            LIGHTS OUT & AWAY WE GO!
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style jsx>{`
         .preloader-overlay {
           position: fixed;
           inset: 0;
@@ -228,8 +228,8 @@ const Preloader = ({ onComplete }) => {
           font-weight: 900;
         }
       `}</style>
-        </motion.div>
-    );
+    </motion.div>
+  );
 };
 
 export default Preloader;
