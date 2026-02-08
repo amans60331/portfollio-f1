@@ -1,236 +1,235 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import F1Car from './F1Car';
 
 const Preloader = ({ onComplete }) => {
-  const [showText, setShowText] = useState(false);
+    const [lights, setLights] = useState(0); // 0-4
+    const [hasStarted, setHasStarted] = useState(false);
 
-  useEffect(() => {
-    const textTimer = setTimeout(() => setShowText(true), 1200);
-    const mainTimer = setTimeout(onComplete, 5000);
-    return () => {
-      clearTimeout(textTimer);
-      clearTimeout(mainTimer);
-    };
-  }, [onComplete]);
+    useEffect(() => {
+        const timers = [];
+        // Faster F1 Lighting Sequence
+        timers.push(setTimeout(() => setLights(1), 500));
+        timers.push(setTimeout(() => setLights(2), 1000));
+        timers.push(setTimeout(() => setLights(3), 1500));
+        timers.push(setTimeout(() => setLights(4), 2000));
 
-  // Smoke particle logic
-  const SmokeParticle = ({ delay, type }) => (
-    <motion.div
-      initial={{ opacity: 0.6, scale: 0.2, x: 0, y: 0 }}
-      animate={{
-        opacity: 0,
-        scale: type === 'tire' ? 3 : 5,
-        x: -100 - Math.random() * 150,
-        y: type === 'tire' ? (Math.random() * 20 - 10) : (Math.random() * 40 - 20)
-      }}
-      transition={{ duration: 1.5, delay, ease: "easeOut" }}
-      className={`particle ${type}-smoke`}
-    />
-  );
+        // Launch!
+        timers.push(setTimeout(() => {
+            setLights(5); // Go
+            setHasStarted(true);
+        }, 2800));
 
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="preloader-overlay"
-    >
-      <div className="racing-environ">
-        {/* F1 Circuit Grid */}
-        <div className="grid-bg"></div>
+        // Exit
+        timers.push(setTimeout(onComplete, 5000));
 
+        return () => timers.forEach(t => clearTimeout(t));
+    }, [onComplete]);
+
+    const SmokeParticle = ({ delay, isStarting = false }) => (
         <motion.div
-          initial={{ left: "-400px" }}
-          animate={{ left: "130%" }}
-          transition={{
-            duration: 2.2,
-            ease: [0.85, 0, 0.15, 1], // Aggressive acceleration curve
-          }}
-          className="f1-car-wrapper"
+            initial={{ opacity: 0.6, scale: 0.2, x: 0, y: 0 }}
+            animate={{
+                opacity: 0,
+                scale: isStarting ? 2 : 5,
+                x: isStarting ? -30 - Math.random() * 50 : -300 - Math.random() * 200,
+                y: Math.random() * 30 - 15
+            }}
+            transition={{ duration: isStarting ? 1.5 : 2.5, delay, ease: "easeOut" }}
+            className="smoke-particle"
+        />
+    );
+
+    return (
+        <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.5 } }}
+            className="preloader-overlay"
         >
-          {/* Detailed SVG F1 Car */}
-          <div className="f1-car-container">
-            <svg viewBox="0 0 250 80" className="f1-svg">
-              {/* Back Wing */}
-              <path d="M10 20 L40 20 L45 10 L5 10 Z" fill="#ef4444" />
-              <rect x="15" y="20" width="5" height="30" fill="#111" />
+            <div className="vignette"></div>
 
-              {/* Main Body */}
-              <path d="M20 50 Q40 50 60 45 L180 45 Q210 45 230 60 L240 60 L240 65 L20 65 Z" fill="#000" stroke="#ef4444" strokeWidth="1" />
-              <path d="M60 45 Q100 25 140 45" fill="#ef4444" opacity="0.8" />
+            <div className="top-gantry">
+                <div className="gantry-structure">
+                    <div className="light-unit-row">
+                        {[1, 2, 3, 4].map((num) => (
+                            <div key={num} className="light-unit">
+                                <div className={`light-bulb red ${lights >= num && lights < 5 ? 'on' : ''}`}>
+                                    <div className="bulb-glare"></div>
+                                </div>
+                                <div className={`light-bulb green ${lights === 5 ? 'on' : ''}`}>
+                                    <div className="bulb-glare"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
-              {/* Cockpit / Halo */}
-              <path d="M110 45 Q120 30 135 45" fill="none" stroke="#6366f1" strokeWidth="2" />
-              <circle cx="125" cy="40" r="3" fill="#6366f1" />
+            <div className="neon-track-zone">
+                <div className="track-glow"></div>
+                <div className="neon-edge-line"></div>
+                <div className="center-dash-stripes"></div>
+            </div>
 
-              {/* Sidepods */}
-              <path d="M80 50 Q120 50 160 55 L160 65 L80 65 Z" fill="#111" />
-              <path d="M85 52 L155 52" stroke="#ef4444" strokeWidth="0.5" strokeDasharray="5,2" />
-
-              {/* Wheels */}
-              <g className="wheel-group">
-                {/* Back Wheel */}
-                <circle cx="45" cy="60" r="18" fill="#050505" stroke="#333" strokeWidth="2" />
-                <circle cx="45" cy="60" r="14" fill="none" stroke="#ef4444" strokeWidth="1" strokeDasharray="4,4" className="spinning-rim" />
-                <circle cx="45" cy="60" r="4" fill="#222" />
-
-                {/* Front Wheel */}
-                <circle cx="200" cy="62" r="16" fill="#050505" stroke="#333" strokeWidth="2" />
-                <circle cx="200" cy="62" r="12" fill="none" stroke="#ef4444" strokeWidth="1" strokeDasharray="4,4" className="spinning-rim" />
-                <circle cx="200" cy="62" r="3" fill="#222" />
-              </g>
-
-              {/* Front Wing */}
-              <path d="M220 60 L250 60 L250 65 L215 65 Z" fill="#ef4444" />
-              <path d="M230 55 L245 55 L245 60 L230 60 Z" fill="#111" />
-            </svg>
-
-            {/* Exhaust Fire */}
             <motion.div
-              animate={{ scaleX: [1, 1.5, 1], opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 0.1, repeat: Infinity }}
-              className="exhaust-fire"
-            />
+                initial={{ left: "-40%", x: "-50%", bottom: "25%" }}
+                animate={hasStarted
+                    ? { left: "150%", transition: { duration: 1.1, ease: [0.8, 0, 0.1, 1] } }
+                    : { left: "50%", transition: { duration: 1.5, ease: "circOut" } }
+                }
+                className="f1-realistic-wrapper"
+            >
+                <div className="car-vfx-container">
+                    {!hasStarted && (
+                        <div className="countdown-smoke">
+                            {[...Array(12)].map((_, i) => <SmokeParticle key={`pre-${i}`} delay={i * 0.1} isStarting={true} />)}
+                        </div>
+                    )}
 
-            {/* Particle Systems */}
-            <div className="exhaust-cloud">
-              {[...Array(15)].map((_, i) => <SmokeParticle key={`ex-${i}`} delay={i * 0.05} type="exhaust" />)}
-            </div>
-            <div className="tire-cloud">
-              {[...Array(10)].map((_, i) => <SmokeParticle key={`tr-${i}`} delay={i * 0.08} type="tire" />)}
-            </div>
-          </div>
-        </motion.div>
+                    <F1Car isMoving={hasStarted} />
 
-        {/* Text Reveal */}
-        <AnimatePresence>
-          {showText && (
-            <div className="reveal-container">
-              <motion.h1
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="racing-font main-title"
-              >
-                Welcome to My story
-              </motion.h1>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 2, delay: 1 }}
-                className="racing-line"
-              />
-            </div>
-          )}
-        </AnimatePresence>
-      </div>
+                    {hasStarted && (
+                        <div className="launch-vfx">
+                            <div className="engine-flame"></div>
+                            <div className="thick-smoke">
+                                {[...Array(30)].map((_, i) => <SmokeParticle key={`post-${i}`} delay={i * 0.01} />)}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </motion.div>
 
-      <style jsx>{`
+            <AnimatePresence>
+                {hasStarted && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="f1-announcement racing-font"
+                    >
+                        LIGHTS OUT & AWAY WE GO!
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <style jsx>{`
         .preloader-overlay {
           position: fixed;
           inset: 0;
           background: #000;
           z-index: 10000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
           overflow: hidden;
         }
-        .racing-environ {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .grid-bg {
+        .vignette {
           position: absolute;
           inset: 0;
-          background-image: 
-            linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-          background-size: 50px 50px;
-          perspective: 1000px;
-          transform: rotateX(60deg) translateY(-100px);
-          opacity: 0.5;
+          background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.8) 100%);
+          z-index: 10;
         }
-
-        .f1-car-wrapper {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 250px;
-          height: 80px;
-        }
-        .f1-car-container {
+        .top-gantry {
+          width: 100%;
+          height: 160px;
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          padding-bottom: 20px;
           position: relative;
-          width: 100%;
-          height: 100%;
+          z-index: 20;
         }
-        .f1-svg {
-          width: 100%;
-          height: 100%;
-          filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.4));
+        .gantry-structure {
+          background: #111;
+          padding: 10px 30px;
+          border-radius: 60px;
+          border: 2px solid #222;
+          box-shadow: 0 10px 40px rgba(0,0,0,1);
         }
-
-        .spinning-rim {
-          animation: spin 0.1s linear infinite;
-          transform-origin: center;
+        .light-unit-row { display: flex; gap: 20px; }
+        .light-unit {
+          width: 45px;
+          height: 85px;
+          background: #000;
+          border-radius: 12px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          padding: 6px;
         }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .exhaust-fire {
-          position: absolute;
-          left: -5px;
-          top: 55px;
-          width: 40px;
-          height: 10px;
-          background: linear-gradient(90deg, #ef4444, transparent);
-          filter: blur(4px);
+        .light-bulb {
+          width: 25px;
+          height: 25px;
           border-radius: 50%;
-          transform-origin: right;
+          background: #050505;
+          margin: 0 auto;
+          position: relative;
         }
-
-        .exhaust-cloud, .tire-cloud {
+        .bulb-glare {
           position: absolute;
-          left: 20px;
-          top: 60px;
+          top: 15%;
+          left: 15%;
+          width: 30%;
+          height: 30%;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
         }
-        :global(.particle) {
+        .light-bulb.red.on {
+          background: #ff0000;
+          box-shadow: 0 0 35px #ff0000, inset 0 0 10px rgba(255,255,255,0.8);
+        }
+        .light-bulb.green.on {
+          background: #00ff00;
+          box-shadow: 0 0 45px #00ff00, inset 0 0 10px rgba(255,255,255,0.8);
+        }
+        .neon-track-zone {
+          position: absolute;
+          bottom: 25%;
+          width: 100%;
+          height: 10px;
+        }
+        .track-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, transparent 80%);
+          transform: scaleY(5);
+        }
+        .f1-realistic-wrapper {
+          position: absolute;
+          width: 400px;
+          z-index: 100;
+        }
+        .car-vfx-container { position: relative; }
+        .engine-flame {
+          position: absolute;
+          left: -40px;
+          top: 75%;
+          width: 100px;
+          height: 25px;
+          background: linear-gradient(-90deg, transparent, #ef4444, #ffaa00);
+          filter: blur(8px);
+          animation: firePulse 0.05s infinite;
+        }
+        @keyframes firePulse {
+           0%, 100% { transform: scaleY(1); opacity: 0.8; }
+           50% { transform: scaleY(1.3); opacity: 1; }
+        }
+        :global(.smoke-particle) {
           position: absolute;
           background: rgba(255, 255, 255, 0.3);
           border-radius: 50%;
-          filter: blur(12px);
+          filter: blur(15px);
         }
-        :global(.tire-smoke) {
-          background: rgba(255, 255, 255, 0.15);
-        }
-
-        .reveal-container {
+        .f1-announcement {
+          position: absolute;
+          top: 50%;
+          width: 100%;
           text-align: center;
-          position: relative;
-          z-index: 10;
-        }
-        .main-title {
-          font-size: clamp(2rem, 10vw, 6rem);
+          font-size: 3rem;
           color: #fff;
-          text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
-          margin-bottom: 1rem;
-          font-style: italic;
-          letter-spacing: -0.05em;
-        }
-        .racing-line {
-          height: 4px;
-          background: linear-gradient(90deg, transparent, #ef4444, #6366f1, transparent);
-          margin: 0 auto;
-          box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+          z-index: 150;
+          text-shadow: 0 0 40px #6366f1;
+          font-weight: 900;
         }
       `}</style>
-    </motion.div>
-  );
+        </motion.div>
+    );
 };
 
 export default Preloader;
