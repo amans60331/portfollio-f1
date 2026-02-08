@@ -4,13 +4,51 @@ import PitStopMan from '../components/PitStopMan';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = (data) => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\s-+()]{10,15}$/;
+
+    if (!data.get('name').trim()) {
+      newErrors.name = "Driver name required for entry.";
+    }
+
+    if (!emailRegex.test(data.get('email'))) {
+      newErrors.email = "Valid cockpit frequency (email) required.";
+    }
+
+    const phone = data.get('phone');
+    if (phone && !phoneRegex.test(phone)) {
+      newErrors.phone = "Invalid telemetry line (min 10 digits).";
+    }
+
+    if (!data.get('subject').trim()) {
+      newErrors.subject = "Race briefing (subject) required.";
+    }
+
+    if (!data.get('message').trim()) {
+      newErrors.message = "Message logs cannot be empty.";
+    }
+
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormStatus('sending');
+    setErrors({});
 
     const formData = new FormData(e.target);
-    formData.append("access_key", "c908588e-647d-4ae2-a28a-7c26ff342f02");
+    const validationErrors = validateForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setFormStatus('sending');
+    formData.append("access_key", "b55f5973-ba9f-42fd-a896-f03cdb11eb27");
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -48,21 +86,26 @@ const Contact = () => {
           <form onSubmit={handleSubmit} className="racing-form">
             <div className="form-grid">
               <div className="input-field">
-                <input type="text" name="name" placeholder="Full Name" required />
+                <input type="text" name="name" placeholder="Full Name" className={errors.name ? 'field-error' : ''} />
+                {errors.name && <span className="error-text">{errors.name}</span>}
               </div>
               <div className="input-field">
-                <input type="email" name="email" placeholder="Email Address" required />
+                <input type="email" name="email" placeholder="Email Address" className={errors.email ? 'field-error' : ''} />
+                {errors.email && <span className="error-text">{errors.email}</span>}
               </div>
               <div className="input-field">
-                <input type="tel" name="phone" placeholder="Mobile Number" />
+                <input type="tel" name="phone" placeholder="Mobile Number" className={errors.phone ? 'field-error' : ''} />
+                {errors.phone && <span className="error-text">{errors.phone}</span>}
               </div>
               <div className="input-field">
-                <input type="text" name="subject" placeholder="Email Subject" required />
+                <input type="text" name="subject" placeholder="Email Subject" className={errors.subject ? 'field-error' : ''} />
+                {errors.subject && <span className="error-text">{errors.subject}</span>}
               </div>
             </div>
 
             <div className="input-field message-field">
-              <textarea name="message" placeholder="Your Message" rows="8" required></textarea>
+              <textarea name="message" placeholder="Your Message" rows="8" className={errors.message ? 'field-error' : ''}></textarea>
+              {errors.message && <span className="error-text">{errors.message}</span>}
             </div>
 
             <div className="form-footer">
@@ -110,6 +153,9 @@ const Contact = () => {
           gap: 20px;
           margin-bottom: 20px;
         }
+        .input-field {
+            position: relative;
+        }
         .input-field input, .input-field textarea {
           width: 100%;
           background: #1e293b;
@@ -125,6 +171,19 @@ const Contact = () => {
           border-color: var(--accent-electric);
           background: #233149;
           box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+        .input-field .field-error {
+            border-color: var(--accent-racing);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        .error-text {
+            color: var(--accent-racing);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            display: block;
+            font-weight: bold;
         }
         .message-field { margin-bottom: 40px; }
         .form-footer {
