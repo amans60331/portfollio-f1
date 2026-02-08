@@ -1,0 +1,88 @@
+:root {
+  --bg-primary: #000000;
+  --bg-secondary: #050505;
+  --bg-tertiary: #0a0a0a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+
+  --accent-lightning: #6366f1;
+  /* Indigo */
+  --accent-electric: #06b6d4;
+  /* Cyan */
+  --accent-racing: #ef4444;
+  /* Red */
+  --accent-neon: #a855f7;
+  /* Violet */
+
+  --lightning-gradient: linear-gradient(90deg, #6366f1, #a855f7, #06b6d4);
+  --accent-glow: rgba(99, 102, 241, 0.3);
+
+  --transition-speed: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@font-face {
+  font-family: 'Racing';
+  src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.racing-font {
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-style: italic;
+  font-weight: 900;
+}
+
+.section-title {
+  font-size: clamp(2rem, 8vw, 5rem);
+  margin-bottom: 2rem;
+  background: var(--lightning-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+}
+
+/* Racing stripe scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: repeating-linear-gradient(0deg,
+      #ef4444 0,
+      #ef4444 20px,
+      #fff 20px,
+      #fff 40px);
+  border-radius: 4px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 5vw;
+  position: relative;
+  z-index: 2;
+}
