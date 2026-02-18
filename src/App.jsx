@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 // Lazy loading sections
-const Hero = lazy(() => import('./sections/Hero'));
+import Hero from './sections/Hero';
 const About = lazy(() => import('./sections/About'));
 const Skills = lazy(() => import('./sections/Skills'));
 const Projects = lazy(() => import('./sections/Projects'));

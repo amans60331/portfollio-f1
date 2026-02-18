@@ -17,13 +17,18 @@ const Projects = () => {
 
             <div className="circuit-grid">
               {resumeData.projects.map((project, index) => (
-                <motion.div
+                <motion.a
                   key={index}
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   initial={{ opacity: 0, scale: 0.9, x: index % 2 === 0 ? -50 : 50 }}
                   whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                  whileHover={{ scale: 1.02, translateY: -5 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.8 }}
                   className="paddock-card"
+                  style={{ textDecoration: 'none', display: 'block' }}
                 >
                   <div className="card-header">
                     <span className="lap-counter racing-font">LAP 0{index + 1}</span>
@@ -54,9 +59,9 @@ const Projects = () => {
 
                   <div className="card-footer">
                     <div className="racing-stripes"></div>
-                    <a href="#" className="view-link racing-font">VIEW ENTRY ⏵</a>
+                    <span className="view-link racing-font">VIEW ENTRY ⏵</span>
                   </div>
-                </motion.div>
+                </motion.a>
               ))}
             </div>
           </div>

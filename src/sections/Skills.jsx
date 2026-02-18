@@ -49,6 +49,36 @@ const Skills = () => {
               ))}
             </div>
           </div>
+
+          <div className="telemetry">
+            <h3 className="racing-font">Telemetry & Tools</h3>
+            <div className="booster-tags">
+              {resumeData.skills.tools.map(skill => (
+                <motion.span
+                  whileHover={{ scale: 1.1, skewX: -10 }}
+                  key={skill}
+                  className="booster-tag tool"
+                >
+                  {skill}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+
+          <div className="fuel-tank">
+            <h3 className="racing-font">Fuel Tank (DB)</h3>
+            <div className="booster-tags">
+              {resumeData.skills.databases.map(skill => (
+                <motion.span
+                  whileHover={{ scale: 1.1, skewX: -10 }}
+                  key={skill}
+                  className="booster-tag db"
+                >
+                  {skill}
+                </motion.span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -65,8 +95,8 @@ const Skills = () => {
         }
         .paddock-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 50px;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 60px;
         }
         h3 {
           color: var(--text-secondary);
@@ -108,7 +138,13 @@ const Skills = () => {
           font-size: 0.9rem;
           cursor: default;
         }
-        @media (max-width: 768px) {
+        .booster-tag.tool {
+          border-left-color: var(--accent-lightning);
+        }
+        .booster-tag.db {
+          border-left-color: #22c55e;
+        }
+        @media (max-width: 900px) {
           .paddock-grid { grid-template-columns: 1fr; }
           .skills-header-row { flex-direction: column; align-items: flex-start; }
         }
