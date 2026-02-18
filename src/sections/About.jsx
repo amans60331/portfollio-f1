@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { resumeData } from '../data/resumeData';
-import profileImg from '../assets/image2.png';
+import profileImg from '../assets/image1.jpg';
 
 const About = () => {
+  const [eduExpanded, setEduExpanded] = React.useState(false);
+
   return (
     <section id="about" className="about">
       <div className="container">
@@ -31,7 +33,7 @@ const About = () => {
               </div>
               <div className="stat-card">
                 <span className="stat-label">EXP</span>
-                <span className="stat-value">2+ YEARS</span>
+                <span className="stat-value">3+ YEARS</span>
               </div>
             </div>
           </motion.div>
@@ -52,10 +54,41 @@ const About = () => {
                   <span className="tag">📍 BASE</span>
                   <span>{resumeData.location}</span>
                 </div>
-                <div className="detail-row">
+                <div className="detail-row academy-row" onClick={() => setEduExpanded(!eduExpanded)} style={{ cursor: 'pointer' }}>
                   <span className="tag">🎓 ACADEMY</span>
-                  <span>{resumeData.education[0].institution}</span>
+                  <div className="edu-info">
+                    <span className="edu-main">{resumeData.education[0].institution}</span>
+                    <button className="see-more-btn racing-font">
+                      {eduExpanded ? '[-] HIDE SPECS' : '[+] VIEW SPECS'}
+                    </button>
+                  </div>
                 </div>
+
+                {eduExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    className="edu-details-expanded"
+                  >
+                    <p className="degree">{resumeData.education[0].degree}</p>
+                    <p className="score">📊 {resumeData.education[0].score} | 📅 {resumeData.education[0].period}</p>
+
+                    <div className="edu-specs">
+                      <div className="spec-group">
+                        <span className="spec-label">TECH HIGHLIGHTS:</span>
+                        <ul>
+                          {resumeData.education[0].highlights.map((h, i) => <li key={i}>{h}</li>)}
+                        </ul>
+                      </div>
+                      <div className="spec-group">
+                        <span className="spec-label">CORE CIRCUITS (COURSES):</span>
+                        <div className="course-tags">
+                          {resumeData.education[0].courses.map((c, i) => <span key={i} className="course-tag">{c}</span>)}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -151,6 +184,88 @@ const About = () => {
           font-weight: 700;
           min-width: 100px;
         }
+        .edu-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex: 1;
+        }
+        .see-more-btn {
+          background: transparent;
+          border: none;
+          color: var(--accent-lightning);
+          font-size: 0.7rem;
+          cursor: pointer;
+          letter-spacing: 1px;
+          padding: 5px 10px;
+          border: 1px solid rgba(99, 102, 241, 0.3);
+          transition: all 0.3s ease;
+        }
+        .see-more-btn:hover {
+          background: var(--accent-lightning);
+          color: #000;
+        }
+        .edu-details-expanded {
+          margin-top: 10px;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.3);
+          border-left: 2px solid var(--accent-racing);
+          border-radius: 0 10px 10px 0;
+        }
+        .degree {
+          font-weight: 700;
+          color: #fff;
+          margin-bottom: 5px;
+        }
+        .score {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.9);
+          margin-bottom: 20px;
+          display: flex;
+          gap: 15px;
+          align-items: center;
+        }
+        .edu-specs {
+          display: grid;
+          gap: 20px;
+        }
+        .spec-label {
+          display: block;
+          font-size: 0.7rem;
+          color: var(--accent-lightning);
+          font-weight: 800;
+          margin-bottom: 8px;
+        }
+        .spec-group ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .spec-group li {
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 5px;
+          padding-left: 15px;
+          position: relative;
+        }
+        .spec-group li::before {
+          content: '▹';
+          position: absolute;
+          left: 0;
+          color: var(--accent-racing);
+        }
+        .course-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .course-tag {
+          font-size: 0.7rem;
+          padding: 4px 10px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: var(--text-secondary);
+        }
 
         @media (max-width: 1024px) {
           .about-grid {
@@ -158,6 +273,11 @@ const About = () => {
           }
           .about-stop {
             justify-content: center;
+          }
+          .edu-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
           }
         }
       `}</style>

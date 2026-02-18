@@ -47,7 +47,7 @@ const Footer = () => {
           <div className="footer-right">
             <SocialLinks size={20} />
             <div className="lap-timer racing-font">
-              LAST UPDATED: FEB 2024
+              LAST UPDATED: FEB 2026
             </div>
           </div>
         </div>

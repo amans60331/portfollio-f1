@@ -29,7 +29,7 @@ const Hero = () => {
 
           <p className="description">
             Specializing in high-speed frontend architecture and
-            aerodynamic user experiences. 2+ years of full-throttle development.
+            aerodynamic user experiences. 3+ years of full-throttle development.
           </p>
 
           <div className="hero-social-row">
